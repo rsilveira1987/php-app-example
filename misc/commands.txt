@@ -1,0 +1,2 @@
+ip link show
+https://www.serverlab.ca/tutorials/linux/administration-linux/how-to-configure-networking-in-ubuntu-20-04-with-netplan/
