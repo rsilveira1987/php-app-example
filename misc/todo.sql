@@ -10,7 +10,7 @@ CONNECT todo;
 
 CREATE TABLE `todo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `title` varchar(1024) NOT NULL CONSTRAINT `check_1` CHECK (CHECK_LENGTH(title) >= 1),
+  `title` varchar(1024) NOT NULL,
   `done` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 );
