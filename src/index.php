@@ -1,8 +1,8 @@
 <?php
-define('DB_HOST', '{{DB_HOST}}');
-define('DB_USER', '{{DB_USER}}');
-define('DB_PASS', '{{DB_PASS}}');
-define('DB_NAME', '{{DB_NAME}}');
+define('DB_HOST', '192.168.5.167');
+define('DB_USER', 'username5');
+define('DB_PASS', 'todo-app-pass');
+define('DB_NAME', 'todo');
 
 $db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
 $ITEMS = array();
@@ -14,9 +14,11 @@ function get(&$var, $default=null) {
 switch(get($_GET['action'])) {
 case 'new':
 	$title = get($_GET['title']);
-	$stmt = $db->prepare('INSERT INTO todo VALUES(NULL, ?, FALSE)');
-	if(!$stmt->execute(array($title))) {
-			die(print_r($stmt->errorInfo(), true));
+	if (strlen(trim($title)) > 0 ) {
+		$stmt = $db->prepare('INSERT INTO todo VALUES(NULL, ?, FALSE)');
+		if(!$stmt->execute(array($title))) {
+				die(print_r($stmt->errorInfo(), true));
+		}
 	}
 	header("Location: ".$_SERVER['SCRIPT_NAME']);
 	die();
@@ -30,6 +32,11 @@ case 'toggle':
 	}
 	header("Location: ".$_SERVER['SCRIPT_NAME']);
 	die();
+case 'clear':
+		$sql = 'DELETE from todo';
+		$db->exec($sql);
+		header("Location: ".$_SERVER['SCRIPT_NAME']);
+		die();
 default:
 	break;
 }
@@ -38,14 +45,27 @@ default:
 		$ITEMS = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title> Sample TODO App </title>
 	<style>
-		div, body, html {
+		body, html {
 			margin: 0px;
-			background-color: #eee;
+			background-color: #F4F4F4;
 		}
+		.wrapper {
+			max-width: 960px;
+			background-color: #FFFFFF;
+			margin: 1rem auto;
+			padding: 2rem 1rem;
+			box-shadow: 10px 10px 18px -10px rgba(0,0,0,0.18);
+			border-radius: 5px 5px;
+		}
+
 		h1 {
 			padding: 30px;
 		}
@@ -64,23 +84,23 @@ default:
 		div ul {
 			margin: 0px;
 			padding: 0px;			
-			border: 1px solid #333;
+			/* border: 1px solid #333; */
 			max-width: 500px;
-			background-color: #ffe;
-			-webkit-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18);
-			-moz-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18);
-			box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18);
-			border-radius: 5px 5px;
+			/* background-color: #ffe; */
+			/* -webkit-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18); */
+			/* -moz-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18); */
 		}
+		
 		li a {
 			font-size: 1.25em;
+			padding: .5rem;
 			display: block;
 		}
 		li:hover {
-			background-color: #fff;
-			-webkit-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18);
-			-moz-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18);
-			box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18);
+			background-color: #EEE;
+			/* -webkit-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18); */
+			/* -moz-box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18); */
+			/* box-shadow: 10px 10px 18px 1px rgba(0,0,0,0.18); */
 		}
 		li {
 			display: block;
@@ -107,25 +127,35 @@ default:
 	</style>
 </head>
 <body>
-	<h1>Sample TODO</h1>
-	<div id="new-task">
-		<input id="task-title" name="title" type="text" placeholder="Task Title"><button id='new-task-button'>Add</button>
-	</div>
-	<div id="task-list">
-		<ul>
-			<?php foreach($ITEMS as $ITEM): ?>
-			<li class=<?php if($ITEM['done']): ?>"checked"<?php else: ?>"unchecked"<?php endif;?>>
-				<a href="?action=toggle&id=<?=$ITEM['id']?>">
-				<i></i><span>
-				<?=htmlspecialchars($ITEM['title'])?></span>
-				</a>
-			</li>
-			<?php endforeach; ?>
-		</ul>
+	<div class="wrapper">
+		<h1>Sample TODO</h1>
+		<div id="new-task">
+			<input id="task-title" name="title" type="text" placeholder="Task Title"><button id='new-task-button'>Add</button>
+		</div>
+		<div id="task-list">
+			<ul>
+				<?php foreach($ITEMS as $ITEM): ?>
+				<li class=<?php if($ITEM['done']): ?>"checked"<?php else: ?>"unchecked"<?php endif;?>>
+					<a href="?action=toggle&id=<?=$ITEM['id']?>">
+					<i></i><span>
+					<?=htmlspecialchars($ITEM['title'])?></span>
+					</a>
+				</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<div class="footer">
+			<button id='clear-all-button'>Clear All</button>
+		</div>
 	</div>
 	<script>
+		
 		document.getElementById('new-task-button').onclick = function(){
 			window.location.href = '?action=new&title=' + encodeURI(document.getElementById('task-title').value);		
+		};
+
+		document.getElementById('clear-all-button').onclick = function(){
+			window.location.href = '?action=clear';
 		};
 	</script>
 </body>
