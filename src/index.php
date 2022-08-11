@@ -1,4 +1,5 @@
 <?php
+
 define('DB_HOST', '192.168.5.167');
 define('DB_USER', 'username5');
 define('DB_PASS', 'todo-app-pass');
@@ -6,6 +7,8 @@ define('DB_NAME', 'todo');
 
 $db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
 $ITEMS = array();
+
+$ip_server = $_SERVER['SERVER_ADDR'];
 
 function get(&$var, $default=null) {
     return isset($var) ? $var : $default;
@@ -128,7 +131,7 @@ default:
 </head>
 <body>
 	<div class="wrapper">
-		<h1>Sample TODO</h1>
+		<h1>Sample TODO APP</h1>
 		<div id="new-task">
 			<input id="task-title" name="title" type="text" placeholder="Task Title"><button id='new-task-button'>Add</button>
 		</div>
@@ -146,6 +149,9 @@ default:
 		</div>
 		<div class="footer">
 			<button id='clear-all-button'>Clear All</button>
+		</div>
+		<div style="text-align: right;">
+			<small>Running on <?php echo $ip_server; ?></small>
 		</div>
 	</div>
 	<script>
