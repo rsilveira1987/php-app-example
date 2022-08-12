@@ -231,7 +231,7 @@ if ($stmt->execute()) {
 <body>
 	<div class="wrapper">
 		<div class="header">
-			<h1>PHP TODO APP</h1>
+			<h1>TODO LIST APP</h1>
 			<p>Simple PHP todo list application example</p>
 		</div>
 		<div id="new-task">
