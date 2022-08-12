@@ -145,6 +145,7 @@ if ($stmt->execute()) {
 		}
 		li {
 			display: block;
+			margin-bottom: .5rem;
 		}
 		li.checked span {
 			color: #C4C4C4;
@@ -177,7 +178,21 @@ if ($stmt->execute()) {
 			padding:0 6px 0 0;
 			font-style: normal;
 		}
-				
+
+		.add-button:before {
+			color: inherit;
+			font-family: 'FontAwesome';
+			content: '\f067';
+			padding:0 6px 0 0;
+			font-style: normal;
+		}
+		.clear-button:before {
+			color: inherit;
+			font-family: 'FontAwesome';
+			content: '\f1f8';
+			padding:0 6px 0 0;
+			font-style: normal;
+		}		
 		div#new-task {
 			display: flex;
 			flex-flow: row nowrap;
@@ -224,7 +239,7 @@ if ($stmt->execute()) {
 				<input id="task-title" name="title" type="text" placeholder="Task Title">
 			</span>
 			<span class="task-action">
-				<button id='new-task-button' class="primary">Add</button>
+				<button id='new-task-button' class="primary add-button">Add</button>
 			</span>
 		</div>
 		<div id="task-list">
@@ -249,7 +264,7 @@ if ($stmt->execute()) {
 		</div>
 	</div>
 	<div class="footer">
-		<button id='clear-all-button' class="outline">Clear All</button>
+		<button id='clear-all-button' class="outline clear-button">Clear All</button>
 	</div>
 	<script>
 		
