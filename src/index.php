@@ -87,9 +87,13 @@ if ($stmt->execute()) {
 			max-width: 768px;
 			background-color: #FFFFFF;
 			margin: 4rem 1rem;
-			padding: 2rem;
+			padding: 2rem 1rem;
 			box-shadow: 10px 10px 18px -10px rgba(0,0,0,0.18);
 			border-radius: 5px 5px;
+		}
+		.container {
+			max-width: 768px;
+			margin: 0 1rem;
 		}
 		div.header {
 			margin-bottom: 2rem;
@@ -102,12 +106,8 @@ if ($stmt->execute()) {
 			margin: .5rem 0;
 		}
 		div {
-			margin-left: 30px;		
+			/* margin-left: 30px;		 */
 			margin-top: 15px;
-		}
-		div input {
-			/* height: 28px;
-			font-size: 1.2em; */
 		}
 		div button {
 			border-radius: .25rem;
@@ -145,7 +145,10 @@ if ($stmt->execute()) {
 		}
 		li {
 			display: block;
-			margin-bottom: .5rem;
+			margin-bottom: 1rem;
+			padding: .5rem;
+			background-color: #FFFFFF;
+			border-radius: 5px 5px;
 		}
 		li.checked span {
 			color: #C4C4C4;
@@ -170,7 +173,6 @@ if ($stmt->execute()) {
 			color:inherit;
 		}
 		ul li{list-style-type:none;font-size:1em;}
-
 		.delete-button:before {
 			color: inherit;
 			font-family: 'FontAwesome';
@@ -223,6 +225,10 @@ if ($stmt->execute()) {
 		@media screen and (min-width: 768px) {
 			.wrapper {
 				margin: 4rem auto;
+				padding: 2rem;
+			}
+			.container {
+				margin: 0 auto;
 			}
 			span.task-input {
 				flex: 1;
@@ -244,31 +250,34 @@ if ($stmt->execute()) {
 			<span class="task-action">
 				<button id='new-task-button' class="primary add-button">Add</button>
 			</span>
-		</div>
-		<div id="task-list">
-			<ul>
-				<?php foreach($ITEMS as $ITEM): ?>
-				<li class=<?php if($ITEM['done']): ?>"checked"<?php else: ?>"unchecked"<?php endif;?>>
-					<button class="outline delete-button" style="float: right;" data-href="?action=delete&id=<?=$ITEM['id']?>">Delete</button>
-					<a href="?action=toggle&id=<?=$ITEM['id']?>">
-						<i></i>
-						<span><?=htmlspecialchars($ITEM['title'])?></span>
-					</a>
-				</li>
-				<?php endforeach; ?>
-			</ul>
-			<?php if(empty($ITEMS)): ?>
-				<p>You have no tasks in your list.</p>
-			<?php endif; ?>
-		</div>
-		
+		</div>		
 		<div style="text-align: right;">
 			<small>Running on <?php echo $ip_server; ?></small>
 		</div>
 	</div>
-	<div class="footer">
-		<button id='clear-all-button' class="outline clear-button">Clear All</button>
-	</div>
+
+	<?php if(empty($ITEMS)): ?>
+		<p style="text-align: center;">You have no tasks in your list.</p>
+	<?php else: ?>
+		<div class="container">
+			<div id="task-list">
+				<ul>
+					<?php foreach($ITEMS as $ITEM): ?>
+					<li style="position: relative;" class=<?php if($ITEM['done']): ?>"checked"<?php else: ?>"unchecked"<?php endif;?>>
+						<button class="outline delete-button" style="float: right;" data-href="?action=delete&id=<?=$ITEM['id']?>">Delete</button>
+						<a href="?action=toggle&id=<?=$ITEM['id']?>">
+							<i></i>
+							<span><?=htmlspecialchars($ITEM['title'])?></span>
+						</a>
+					</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		</div>
+		<div class="footer">
+			<button id='clear-all-button' class="outline clear-button">Clear All</button>
+		</div>
+	<?php endif; ?>
 	<script>
 		
 		document.getElementById('new-task-button').onclick = function(){
