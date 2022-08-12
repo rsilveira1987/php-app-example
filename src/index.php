@@ -86,7 +86,7 @@ if ($stmt->execute()) {
 		.wrapper {
 			max-width: 768px;
 			background-color: #FFFFFF;
-			margin: 4rem auto;
+			margin: 4rem 1rem;
 			padding: 2rem;
 			box-shadow: 10px 10px 18px -10px rgba(0,0,0,0.18);
 			border-radius: 5px 5px;
@@ -221,6 +221,9 @@ if ($stmt->execute()) {
 		}
 
 		@media screen and (min-width: 768px) {
+			.wrapper {
+				margin: 4rem auto;
+			}
 			span.task-input {
 				flex: 1;
 			}
