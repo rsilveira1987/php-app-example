@@ -72,16 +72,38 @@ if ($stmt->execute()) {
 	<style>
 		:root {
 			--primary: #EA882E;
+			--primary80: #EEA058;
+			--primary60: #F2B882;
+			--primary40: #F7CFAB;
+			--primary20: #FBE7D5;
+
+			--black: #808080;
+			--black80: #999999;
+			--black60: #B3B3B3;
+			--black40: #CCCCCC;
+			--black20: #E6E6E6;
+			--black10: #F3F3F3;
+
 			--secondary: #FFA34D;
 			--support: #FFB066;
+
+			--gradient: linear-gradient( var(--primary40), var(--primary80));
 		}
-		* {
-			box-sizing: border-box;
-		}
+		* { box-sizing: border-box; }
 		body, html {
-			font-family: 'Ubuntu';
+			font: 1em/1.2 'Ubuntu';
 			margin: 0px;
-			background-color: #F4F4F4;
+			background-color: var(--black10);
+		}
+		header {
+			padding: 1rem;
+			/* background-color: var(--primary60); */
+			background-image: var(--gradient);
+			color: #FFFFFF;
+			font-weight: bold;
+			display: flex;
+			flex-flow: row nowrap;
+			justify-content: space-between;
 		}
 		.wrapper {
 			max-width: 768px;
@@ -99,27 +121,24 @@ if ($stmt->execute()) {
 			margin-bottom: 2rem;
 		}
 		h1 {
-			color: var(--primary);
-			margin-bottom: 0;
+			color: var(--primary60);
+			margin: 0;
 		}
 		p {
+			color: var(--black);
 			margin: .5rem 0;
-		}
-		div {
-			/* margin-left: 30px;		 */
-			margin-top: 15px;
 		}
 		div button {
 			border-radius: .25rem;
-			border: 1px solid var(--secondary);
+			border: none;
 			cursor: pointer;
 			padding: .5rem 1.5rem;
-			/* height: 28px;*/
-			/* font-size: 1.2em; */
+			font-weight: bold;
 		}
 		div button.primary {
-			background-color: var(--support);
+			background-color: var(--primary60);
 			color: #FFFFFF;
+			font-weight: bold;
 		}
 		div button.outline {
 			background-color: transparent;
@@ -132,21 +151,20 @@ if ($stmt->execute()) {
 		div ul {
 			margin: 0px;
 			padding: 0px;			
-			/* max-width: 500px; */
+			color: var(--black);
 		}
 		
 		li a {
-			/* font-size: 1.25em; */
 			padding: .5rem;
 			display: block;
 		}
 		li:hover {
-			background-color: #EEE;
+			background-color: var(--black20);
 		}
 		li {
-			display: block;
+			display: flex;
+			flex-flow: row nowrap;
 			margin-bottom: 1rem;
-			padding: .5rem;
 			background-color: #FFFFFF;
 			border-radius: 5px 5px;
 		}
@@ -169,15 +187,18 @@ if ($stmt->execute()) {
 			font-style: normal;
 		}
 		li a {
+			flex: 1;
+			display: block;
 			text-decoration: none;
 			color:inherit;
+			padding: 1rem;
 		}
 		ul li{list-style-type:none;font-size:1em;}
 		.delete-button:before {
 			color: inherit;
 			font-family: 'FontAwesome';
-			content: '\f05e';
-			padding:0 6px 0 0;
+			content: '\f1f8';
+			/* padding:0 6px 0 0; */
 			font-style: normal;
 		}
 
@@ -188,6 +209,10 @@ if ($stmt->execute()) {
 			padding:0 6px 0 0;
 			font-style: normal;
 		}
+		.clear-button {
+			margin: 2rem 0;
+			width: 100%;
+		}
 		.clear-button:before {
 			color: inherit;
 			font-family: 'FontAwesome';
@@ -195,33 +220,39 @@ if ($stmt->execute()) {
 			padding:0 6px 0 0;
 			font-style: normal;
 		}		
-		div#new-task {
-			display: flex;
-			flex-flow: row nowrap;
-			gap: 1rem;
-			align-items: center;
-		}
-
-		span.task-input {
-			border-bottom: 1px solid var(--secondary);
-			width: 100%;
-		}
-
 		input {
 			padding: 1rem .5rem;
 			width: 100%;
 			border: none;
+			color: var(--black);
+			font-size: 1em;
 		}
 
 		input:focus{
-			outline: var(--primary);
-			background-color: #F6F6F6;
+			outline: var(--primary); 
+			background-color: var(--black10);
 		}
 
 		div.footer {
 			text-align: center;
 		}
 
+		span.task-input {
+			border-bottom: 1px solid var(--primary60);
+			width: 100%;
+		}
+
+		span.task-action,
+		span.task-action button {
+			width: 100%;
+		}
+
+		div#new-task {
+			display: flex;
+			flex-flow: column nowrap;
+			gap: 2rem;
+			align-items: center;
+		}
 		@media screen and (min-width: 768px) {
 			.wrapper {
 				margin: 4rem auto;
@@ -230,30 +261,47 @@ if ($stmt->execute()) {
 			.container {
 				margin: 0 auto;
 			}
+			.clear-button {
+				width: auto;
+			}
 			span.task-input {
 				flex: 1;
 			}
+			span.task-action,
+			span.task-action button {
+				width: auto;
+			}
+			div#new-task {
+				display: flex;
+				flex-flow: row nowrap;
+				gap: 1rem;
+				align-items: center;
+			}
+
 		}
 
 	</style>
 </head>
 <body>
+	<header>
+		<span>TODO LIST APP</span>
+		<small>Running on <?php echo $ip_server; ?></small>
+	</header>
 	<div class="wrapper">
 		<div class="header">
-			<h1>TODO LIST APP</h1>
-			<p>Simple PHP todo list application example</p>
+			<h1>What do you need to do?</h1>
 		</div>
-		<div id="new-task">
-			<span class="task-input">
-				<input id="task-title" name="title" type="text" placeholder="Task Title">
-			</span>
-			<span class="task-action">
-				<button id='new-task-button' class="primary add-button">Add</button>
-			</span>
-		</div>		
-		<div style="text-align: right;">
-			<small>Running on <?php echo $ip_server; ?></small>
-		</div>
+		<form action="" method="GET">
+			<div id="new-task">
+				<span class="task-input">
+					<input id="task-title" name="title" type="text" placeholder="Task Title">
+					<input name="action" value="new" type="hidden">
+				</span>
+				<span class="task-action">
+					<button id='new-task-button' class="primary add-button">Add</button>
+				</span>
+			</div>			
+		</form>	
 	</div>
 
 	<?php if(empty($ITEMS)): ?>
@@ -263,22 +311,29 @@ if ($stmt->execute()) {
 			<div id="task-list">
 				<ul>
 					<?php foreach($ITEMS as $ITEM): ?>
-					<li style="position: relative;" class=<?php if($ITEM['done']): ?>"checked"<?php else: ?>"unchecked"<?php endif;?>>
-						<button class="outline delete-button" style="float: right;" data-href="?action=delete&id=<?=$ITEM['id']?>">Delete</button>
+					<li class=<?php if($ITEM['done']): ?>"checked"<?php else: ?>"unchecked"<?php endif;?>>
 						<a href="?action=toggle&id=<?=$ITEM['id']?>">
-							<i></i>
-							<span><?=htmlspecialchars($ITEM['title'])?></span>
+							<div>
+								<i></i>
+								<span><?=htmlspecialchars($ITEM['title'])?></span>
+							</div>
 						</a>
+						<button class="outline delete-button" style="float: right;" data-href="?action=delete&id=<?=$ITEM['id']?>"></button>
 					</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
 		</div>
-		<div class="footer">
+		<div class="container footer">
 			<button id='clear-all-button' class="outline clear-button">Clear All</button>
 		</div>
 	<?php endif; ?>
 	<script>
+
+		const input = document.querySelector("#task-title");
+		window.onload = function(){
+			input.focus();
+		};
 		
 		document.getElementById('new-task-button').onclick = function(){
 			window.location.href = '?action=new&title=' + encodeURI(document.getElementById('task-title').value);		
@@ -296,12 +351,7 @@ if ($stmt->execute()) {
 			}
 		});
 
-		// console.log(deleteButtons);
-
-		// document.getElementById('delete-button').onclick = function(){
-		// 	console.log(this.getAttribute('data-href'));
-		// 	// window.location.href = '?action=clear';
-		// };
+		
 	</script>
 </body>
 </html>
