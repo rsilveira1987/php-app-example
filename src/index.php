@@ -1,9 +1,9 @@
 <?php
 
-define('DB_HOST', '192.168.5.167');
-define('DB_USER', 'username5');
-define('DB_PASS', 'todo-app-pass');
-define('DB_NAME', 'todo');
+define('DB_HOST', '{{DB_HOST}}');
+define('DB_USER', '{{DB_USER}}');
+define('DB_PASS', '{{DB_PASS}}');
+define('DB_NAME', '{{DB_NAME}}');
 
 try {
 	$db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
