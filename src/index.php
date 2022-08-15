@@ -17,6 +17,16 @@ $ITEMS = array();
 
 $ip_server = $_SERVER['SERVER_ADDR'];
 
+// Progress information
+$stmt = $db->prepare('SELECT round(SUM(done) * 100/(SELECT count(*) FROM todo),2) AS progress  FROM todo');
+$ret = $stmt->execute($sql);
+$progressInfo = $stmt->fetch()['progress'] ?? '0.00';
+
+// Tasks information
+$stmt = $db->prepare('SELECT count(*) as done_tasks FROM todo WHERE done = 1');
+$ret = $stmt->execute($sql);
+$doneTasksInfo = $stmt->fetch()['done_tasks'] ?? 0;
+
 function get(&$var, $default=null) {
     return isset($var) ? $var : $default;
 }
@@ -94,7 +104,7 @@ if ($stmt->execute()) {
 			--secondary: #FFA34D;
 			--support: #FFB066;
 
-			--gradient: linear-gradient( var(--primary40), var(--primary80));
+			--gradient: linear-gradient( to right, var(--primary40), var(--primary80));
 		}
 		* { box-sizing: border-box; }
 		body, html {
@@ -115,8 +125,7 @@ if ($stmt->execute()) {
 		.wrapper {
 			max-width: 768px;
 			background-color: #FFFFFF;
-			/* margin: 4rem 1rem; */
-			margin-bottom: 4rem;
+			margin-bottom: 2rem;
 			padding: 2rem 1rem;
 			box-shadow: 10px 10px 18px -10px rgba(0,0,0,0.18);
 			border-radius: 5px 5px;
@@ -295,12 +304,40 @@ if ($stmt->execute()) {
 			background-color: var(--black10);
 			border-top: 1px solid var(--black20);
 		}
+		
+		div.progress-bar {
+			background-color: var(--black20);
+			width: 100%;
+			height: 5px;
+			/* margin-bottom: 2rem; */
+		}
+		div.progress-bar-inner {
+			height: 100%;
+			background: var(--gradient);
+		}
+		div.progress {
+			display: flex;
+			flex-flow: row nowrap;
+			align-items: center;
+			gap: 16px;
+			line-height: 100%;
+			color: var(--black);
+			margin-bottom: 2rem;
+		}
+		div.progress-bar {
+			flex: 1;
+		}
+		div.progress-info::after {
+			content: '%';
+			display: inline-block;
+			color: inherit;
+		}
 		@media screen and (min-width: 768px) {
 			body, html {
 				font: 1.1em/1.2 'Ubuntu';
 			}
 			.wrapper {
-				margin: 4rem auto;
+				margin: 2rem auto;
 				padding: 2rem;
 			}
 			.container {
@@ -364,6 +401,19 @@ if ($stmt->execute()) {
 	<?php if(empty($ITEMS)): ?>
 		<p style="text-align: center;">You have no tasks in your list.</p>
 	<?php else: ?>
+		
+		<div class="container">
+			<p>Your progress (<?= $doneTasksInfo . "/" . count($ITEMS) ?>)</p>
+			<div class="progress">
+				<div class="progress-bar">
+					<div class="progress-bar-inner" style="width:<?= $progressInfo ?>%;"></div>
+				</div>
+				<div class="progress-info">
+					<?= $progressInfo ?>
+				</div>
+			</div>
+		</div>
+		
 		<div class="container">
 			<div id="task-list">
 				<ul>
