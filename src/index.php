@@ -1,9 +1,9 @@
 <?php
 
-define('DB_HOST', '{{DB_HOST}}');
-define('DB_USER', '{{DB_USER}}');
-define('DB_PASS', '{{DB_PASS}}');
-define('DB_NAME', '{{DB_NAME}}');
+define('DB_HOST', '192.168.5.167');
+define('DB_USER', 'username5');
+define('DB_PASS', 'todo-app-pass');
+define('DB_NAME', 'todo');
 
 try {
 	$db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
@@ -98,7 +98,7 @@ if ($stmt->execute()) {
 		}
 		* { box-sizing: border-box; }
 		body, html {
-			font: 1em/1.2 'Ubuntu';
+			font: 0.9em/1.2 'Ubuntu';
 			margin: 0px;
 			background-color: var(--black10);
 		}
@@ -137,8 +137,8 @@ if ($stmt->execute()) {
 			margin: .5rem 0;
 		}
 		button {
-			position: relative;
-            overflow: hidden;
+			/* position: relative;
+            overflow: hidden; */
 			border-radius: .25rem;
 			outline: 0;
             border: 0;
@@ -147,18 +147,24 @@ if ($stmt->execute()) {
 			font-weight: bold;
             cursor: pointer;
 		}
-		button.primary {
+		button.btn-primary {
 			background-color: var(--primary60);
 			color: #FFFFFF;
 			font-weight: bold;
 		}
-		button.outline {
+		button.btn-secondary {
 			background-color: transparent;
 			color: var(--secondary);
+		}
+		button.btn-outline {
+			border: 1px solid var(--secondary);
 		}
 		button:hover {
 			background-color: var(--secondary);
 			color: #FFFFFF;
+		}
+		button:active {
+			transform: translate(1px,1px);
 		}
 		span.ripple {
             position: absolute; /* The absolute position we mentioned earlier */
@@ -278,7 +284,21 @@ if ($stmt->execute()) {
 			gap: 2rem;
 			align-items: center;
 		}
+		div#task-list {
+			padding-bottom: 8rem;
+		}
+		.footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			padding: 0 1rem;
+			background-color: var(--black10);
+			border-top: 1px solid var(--black20);
+		}
 		@media screen and (min-width: 768px) {
+			body, html {
+				font: 1.1em/1.2 'Ubuntu';
+			}
 			.wrapper {
 				margin: 4rem auto;
 				padding: 2rem;
@@ -288,6 +308,7 @@ if ($stmt->execute()) {
 			}
 			.clear-button {
 				width: auto;
+				margin: 1rem 0;
 			}
 			span.task-input {
 				flex: 1;
@@ -301,6 +322,16 @@ if ($stmt->execute()) {
 				flex-flow: row nowrap;
 				gap: 1rem;
 				align-items: center;
+			}
+			div#task-list {
+				padding: 0;
+			}
+			.footer {
+				position: initial;
+				padding: 0 1rem;
+				background-color: var(--black10);
+				border: none;
+				padding: 0;
 			}
 
 		}
@@ -324,7 +355,7 @@ if ($stmt->execute()) {
 					<input name="action" value="new" type="hidden">
 				</span>
 				<span class="task-action">
-					<button id='new-task-button' class="primary add-button">Add</button>
+					<button id='new-task-button' class="btn-primary add-button">Add</button>
 				</span>
 			</div>			
 		</form>	
@@ -344,14 +375,14 @@ if ($stmt->execute()) {
 								<span><?=htmlspecialchars($ITEM['title'])?></span>
 							</div>
 						</a>
-						<button class="outline delete-button" style="float: right;" data-href="?action=delete&id=<?=$ITEM['id']?>"></button>
+						<button class="btn-secondary delete-button" style="float: right;" data-href="?action=delete&id=<?=$ITEM['id']?>"></button>
 					</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
 		</div>
-		<div class="container footer">
-			<button id='clear-all-button' class="outline clear-button">Clear All</button>
+		<div class="footer">
+			<button id='clear-all-button' class="btn-secondary btn-outline clear-button">Clear All</button>
 		</div>
 	<?php endif; ?>
 	<script>
