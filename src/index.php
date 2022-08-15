@@ -8,7 +8,9 @@ define('DB_NAME', '{{DB_NAME}}');
 try {
 	$db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
 } catch(PDOException $e) {
-	print "<pre>$e->getMessage()</pre>";
+	$message = $e->getMessage();
+	print "<pre>$message</pre>";
+	die();
 }
 
 $ITEMS = array();
