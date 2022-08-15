@@ -5,7 +5,12 @@ define('DB_USER', '{{DB_USER}}');
 define('DB_PASS', '{{DB_PASS}}');
 define('DB_NAME', '{{DB_NAME}}');
 
-$db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
+try {
+	$db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
+} catch(PDOException $e) {
+	print "<pre>$e->getMessage()</pre>";
+}
+
 $ITEMS = array();
 
 $ip_server = $_SERVER['SERVER_ADDR'];
@@ -97,8 +102,8 @@ if ($stmt->execute()) {
 		}
 		header {
 			padding: 1rem;
-			/* background-color: var(--primary60); */
-			background-image: var(--gradient);
+			background-color: var(--primary60);
+			/* background-image: var(--gradient); */
 			color: #FFFFFF;
 			font-weight: bold;
 			display: flex;
@@ -108,7 +113,8 @@ if ($stmt->execute()) {
 		.wrapper {
 			max-width: 768px;
 			background-color: #FFFFFF;
-			margin: 4rem 1rem;
+			/* margin: 4rem 1rem; */
+			margin-bottom: 4rem;
 			padding: 2rem 1rem;
 			box-shadow: 10px 10px 18px -10px rgba(0,0,0,0.18);
 			border-radius: 5px 5px;
@@ -128,26 +134,43 @@ if ($stmt->execute()) {
 			color: var(--black);
 			margin: .5rem 0;
 		}
-		div button {
+		button {
+			position: relative;
+            overflow: hidden;
 			border-radius: .25rem;
-			border: none;
-			cursor: pointer;
-			padding: .5rem 1.5rem;
+			outline: 0;
+            border: 0;
+			padding: .75rem 1.5rem;
+			color: #fff;
 			font-weight: bold;
+            cursor: pointer;
 		}
-		div button.primary {
+		button.primary {
 			background-color: var(--primary60);
 			color: #FFFFFF;
 			font-weight: bold;
 		}
-		div button.outline {
+		button.outline {
 			background-color: transparent;
 			color: var(--secondary);
 		}
-		div button:hover {
+		button:hover {
 			background-color: var(--secondary);
 			color: #FFFFFF;
 		}
+		span.ripple {
+            position: absolute; /* The absolute position we mentioned earlier */
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 600ms linear;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
 		div ul {
 			margin: 0px;
 			padding: 0px;			
@@ -287,6 +310,7 @@ if ($stmt->execute()) {
 		<span>TODO LIST APP</span>
 		<small>Running on <?php echo $ip_server; ?></small>
 	</header>
+	
 	<div class="wrapper">
 		<div class="header">
 			<h1>What do you need to do?</h1>
@@ -351,6 +375,31 @@ if ($stmt->execute()) {
 			}
 		});
 
+		// buttons
+		function createRipple(event) {
+			// ripple function
+			const button = event.currentTarget;
+			const circle = document.createElement("span");
+			const diameter = Math.max(button.clientWidth, button.clientHeight);
+			const radius = diameter / 2;
+			circle.style.width = circle.style.height = `${diameter}px`;
+			circle.style.left = `${event.clientX - (button.offsetLeft + radius)}px`;
+			circle.style.top = `${event.clientY - (button.offsetTop + radius)}px`;
+			circle.classList.add("ripple");
+
+			const ripple = button.getElementsByClassName("ripple")[0];
+
+			if (ripple) {
+				ripple.remove();
+			}
+
+			button.appendChild(circle);
+		}
+
+		// const buttons = document.getElementsByTagName("button");
+		// for (const button of buttons) {
+		// 	button.addEventListener("click", createRipple);
+		// }
 		
 	</script>
 </body>
